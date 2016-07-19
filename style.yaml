@@ -36,36 +36,15 @@ styles:
                     position.xyz = rotateX3D(z*HALF_PI) * rotateZ3D(cos(u_offset.y)*z) * position.xyz;
                     position.y -= u_offset.x*(z*100.);
                     position.z -= u_offset.x*(z*100.);
+    lin:
+      base: lines
+      mix: tilt
     roads:
+        base: lines
         mix: tilt  
-        data: { source: osm }
-        filter:
-            not: { kind: ["path", "rail"] }
-        draw:
-            lines:
-                order: function() { return feature.sort_key; }
-                color: gray
-                width: 8
-                cap: round
-        highway:
-            filter:
-                kind: highway
-            draw:
-                lines:
-                    order: function() { return feature.sort_key; }
-                    color: '#cc6666'
-                    width: 12
-                    outline:
-                        color: grey
-                        width: 1.5
-        minor_road:
-            filter:
-                kind: minor_road
-            draw:
-                lines:
-                    order: function() { return feature.sort_key; }
-                    color: lightgrey
-                    width: 5
+    water:
+        base: polygons
+        mix: tilt
     walls:
         mix: tilt  
         base: polygons
@@ -84,77 +63,34 @@ sources:
         type: TopoJSON
         url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
 layers:
+    roads:
+        data: { source: osm }
+        filter:
+            not: { kind: ["path", "rail"] }
+        draw:
+            roads:
+                order: 3
+                color: [0.4, 0.4, 0.4]
+                width: 8
+            outline:
+                style: lin
+                order: 2
+                color: [0.6, 0.6, 0.6]
+                width: 10
     water:
         data: { source: osm }
         draw:
+            water:
+                order: 1
+                color: [0.2, 0.2, 0.5]
             outline:
-                order: 3
-                color: [0.654,0.897,1.000]
-                width: 1px
+                order: 2
+                style: lin
+                color: [0.3, 0.3, 0.6]
+                width: 2px
                 tile_edges: false
-    roads:
-        data: { source: osm }
-        filter: { not: { kind: [rail, ferry] } }
-        draw:
-            roads:
-                order: 4
-                color: [1, 1, 1]
-                width: 8
-        oneway:
-            filter: { oneway: yes }
-            draw: { roads: { color: red } }
-
-        highway:
-            filter:
-                kind: highway
-            draw:
-                roads:
-                    order: 5
-                    width: 12
-                outline:
-                    order: 4
-                    color: [0.654,0.897,1.000]
-                    width: 13
-        tunnel:
-            filter:
-                is_tunnel: yes
-            rail:
-                filter:
-                    kind: rail
-                visible: false
-        minor_road:
-            filter:
-                kind: minor_road
-            draw:
-                roads:
-                    width: 5
-        path:
-            filter:
-                kind: path
-            draw:
-                roads:
-                    width: 3
-        rail:
-            filter:
-                kind: rail
-                is_tunnel: no
-            draw:
-                roads:
-                    width: 3
     buildings:
         data: { source: osm }
-        draw:
-            walls:
-                order: 6
-                color: [1, 1, 1]
-            baseline:
-                order: 5
-                width: [[12, .1px], [18, 0.5m]]
-                color: [0.654,0.897,1.000]
-            walls-outline:
-                order: 7
-                color: [0.654,0.897,1.000]
-                width: 1px
         extruded:
             filter: { $zoom: { min: 13 } }
             draw:
@@ -162,7 +98,7 @@ layers:
                     extrude: true
                 walls-outline:
                     order: 7
-                    width: [[12, .1px], [14, 0.1px], [15, 0.5px], [17, 1.0px], [18, 1px]]
+                    width: [[12, .1px], [14, 0.5px], [15, 1px], [17, 1.5px], [18, 2px]]
                     extrude: true
                     color: [0.654,0.897,1.000]
  
