@@ -6,9 +6,38 @@ scene:
 cameras:
     camera1:
         type: perspective
-        fov: 120
+        focal_length: 2
 styles:
+    tilt:
+        animated: true
+        shaders:
+            defines:
+                PI: 3.1415926535897932384626433832795
+                HALF_PI: 1.5707963267948966192313216916398
+            uniforms:
+                u_offset: [0,0]
+            blocks:
+                global: |
+                    mat3 rotateX3D(float phi){
+                        return mat3(
+                            vec3(1.,0.,0.),
+                            vec3(0.,cos(phi),-sin(phi)),
+                            vec3(0.,sin(phi),cos(phi)));
+                    }
+                    mat3 rotateZ3D(float psi){
+                        return mat3(
+                            vec3(cos(psi),-sin(psi),0.),
+                            vec3(sin(psi),cos(psi),0.),
+                            vec3(0.,0.,1.));
+                    }
+                position: |
+                    // position.xyz = rotateX3D(abs(cos(u_offset.x))) * rotateZ3D(cos(u_offset.y)) * position.xyz;
+                    float z = smoothstep(0.7,1.,max((u_map_position.z)/20.,0.));
+                    position.xyz = rotateX3D(z*HALF_PI) * rotateZ3D(cos(u_offset.y)*z) * position.xyz;
+                    position.y -= u_offset.x*(z*100.);
+                    position.z -= u_offset.x*(z*100.);
     roads:
+        mix: tilt  
         data: { source: osm }
         filter:
             not: { kind: ["path", "rail"] }
@@ -38,6 +67,7 @@ styles:
                     color: lightgrey
                     width: 5
     walls:
+        mix: tilt  
         base: polygons
         texcoords: true
         blend: overlay
@@ -46,6 +76,7 @@ styles:
                 color: |
                     color = vec4(0, 1, 0, 0.1);
     walls-outline:
+        mix: tilt  
         base: lines
         lighting: false
 sources:
