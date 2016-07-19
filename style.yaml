@@ -6,6 +6,7 @@ scene:
 cameras:
     camera1:
         type: perspective
+        fov: 120
 styles:
     roads:
         data: { source: osm }
