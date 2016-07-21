@@ -1,0 +1,159 @@
+tags:
+  load_all: true
+  exclude:
+  - created_by
+  - source
+
+tables:
+  roads:
+    fields:
+    - name: osm_id
+      type: id
+    - name: geometry
+      type: geometry
+    - name: type
+      type: mapping_value
+    - key: name
+      name: name
+      type: string
+    - key: tunnel
+      name: tunnel
+      type: boolint
+    - key: bridge
+      name: bridge
+      type: boolint
+    - key: oneway
+      name: oneway
+      type: direction
+    - key: ref
+      name: ref
+      type: string
+    - key: layer
+      name: layer
+      type: integer
+    - key: level
+      name: level
+      type: string
+    - key: access
+      name: access
+      type: string
+    - key: service
+      name: service
+      type: string
+    - name: class
+      type: mapping_key
+    filters:
+      exclude_tags:
+      - - area
+        - 'yes'
+    mappings:
+      railway:
+        mapping:
+          railway:
+          - rail
+          - tram
+          - light_rail
+          - subway
+          - narrow_gauge
+          - preserved
+          - funicular
+          - monorail
+          - disused
+    type: linestring
+  transport_areas:
+    fields:
+    - name: osm_id
+      type: id
+    - name: geometry
+      type: geometry
+    - key: name
+      name: name
+      type: string
+    - key: layer
+      name: layer
+      type: integer
+    - key: level
+      name: level
+      type: string
+    - name: type
+      type: mapping_value
+    mapping:
+      railway:
+      - station
+      - platform
+    type: polygon
+  transport_points:
+    fields:
+    - name: osm_id
+      type: id
+    - name: geometry
+      type: geometry
+    - key: name
+      name: name
+      type: string
+    - key: layer
+      name: layer
+      type: integer
+    - key: level
+      name: level
+      type: string
+    - name: type
+      type: mapping_value
+    - key: ref
+      name: ref
+      type: string
+    mapping:
+      railway:
+      - station
+      - halt
+      - tram_stop
+      - crossing
+      - level_crossing
+      - subway_entrance
+    type: point
+  route_members:
+    type: relation_member
+    columns:
+    - name: osm_id
+      type: id
+    - name: member
+      type: member_id
+    - name: index
+      type: member_index
+    - name: role
+      type: member_role
+    - name: type
+      type: member_type
+    - name: geometry
+      type: geometry
+    - name: relname
+      key: name
+      type: string
+    - name: name
+      key: name
+      type: string
+      from_member: true
+    - key: ref
+      name: ref
+      type: string
+    mapping:
+      route: [__any__]
+  routes:
+    type: relation
+    columns:
+    - name: osm_id
+      type: id
+    - key: ref
+      name: ref
+      type: string
+    - name: network
+      key: network
+      type: string
+    - name: colour
+      key: colour
+      type: string
+    - name: route
+      key: route
+      type: string
+    mapping:
+      route: [__any__]

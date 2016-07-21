@@ -1,0 +1,6 @@
+./imposm3-0.2.0dev-20160615-d495ca4-linux-x86-64/imposm3 import  -mapping mapping.yaml -read idf.osm.pbf -overwritecache -write -connection postgis://osm:osm@localhost/osm?prefix=NONE
+time ./imposm3-0.2.0dev-20160615-d495ca4-linux-x86-64/imposm3 import  -mapping mapping.yaml -deployproduction -connection postgis://osm:osm@localhost/osm?prefix=NONE
+
+
+
+ ogr2ogr -f GeoJSON subway.geojson  PG:dbname=osm -sql "select count(1) from routes JOIN route_members ON routes.osm_id = route_members.osm_id JOIN roads ON roads.osm_id = route_members.member WHERE route='subway';"
