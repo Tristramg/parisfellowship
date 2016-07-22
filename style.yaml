@@ -14,6 +14,8 @@ styles:
                 HALF_PI: 1.5707963267948966192313216916398
             uniforms:
                 u_offset: [0,0]
+                u_tilt_x: 0.1
+                u_tilt_z: 0.1
             blocks:
                 global: |
                     mat3 rotateX3D(float phi){
@@ -30,27 +32,19 @@ styles:
                     }
                 position: |
                     float z = smoothstep(0.7,1.,max((u_map_position.z)/20.,0.));
-                    position.xyz = rotateX3D(z*HALF_PI)  * position.xyz;
+                    position.xyz = rotateX3D(u_tilt_x) * rotateZ3D(cos(u_offset.y)*u_tilt_z) * position.xyz;
     lin:
-        base: lines
         mix: tilt
-    roads:
-        mix: tilt
-    railway:
-        mix: tilt
-    water:
+    poly:
         mix: tilt
         base: polygons
     walls:
-        mix: tilt  
-        base: polygons
+        mix: poly 
         blend: overlay
         shaders:
             blocks:
                 color: |
                     color = vec4(0, 1, 0, 0.1);
-    walls-outline:
-        mix: tilt  
 
 sources:
     osm:
@@ -65,7 +59,8 @@ layers:
       data: { source: subway }
       draw:
         railway:
-          order: 1
+          style: lin
+          order: function() { return  feature.layer; }
           color: function() { return feature.colour; }
           width: 8
           z: function() { return  feature.layer * 10; }
@@ -76,18 +71,20 @@ layers:
             not: { kind: ["path", "rail"] }
         draw:
             roads:
-                order: 3
+                style: lin
+                order: function() { return  (feature.layer || 0)+ 1; }
                 color: [0.4, 0.4, 0.4]
                 width: 8
             outline:
                 style: lin
-                order: 2
+                order: function() { return  feature.layer; }
                 color: [0.6, 0.6, 0.6]
                 width: 10
     water:
         data: { source: osm }
         draw:
             water:
+                style: poly
                 order: 1
                 color: [0.2, 0.2, 0.5]
             outline:
@@ -104,6 +101,7 @@ layers:
                 walls:
                     extrude: true
                 walls-outline:
+                    style: lin
                     order: 7
                     width: [[12, .1px], [14, 0.5px], [15, 1px], [17, 1.5px], [18, 2px]]
                     extrude: true
