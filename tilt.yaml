@@ -1,0 +1,14 @@
+import:
+    - https://tangrams.github.io/blocks/geometry/matrices.yaml
+
+styles:
+    tilt:
+        base: lines
+        mix: geometry-matrices
+        shaders:
+            uniforms:
+                u_tilt_x: 0.0
+                u_tilt_z: 0.0
+            blocks:
+                position: |
+                    position.xyz = rotateX3D(u_tilt_x) * rotateZ3D(u_tilt_z) * position.xyz;

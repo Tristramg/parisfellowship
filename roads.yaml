@@ -1,0 +1,295 @@
+settings:
+    roads:
+        - &highway1                   [1.00,1.00,1.00]
+        - &highway_link1              [0.00, 0.00, 0.00]
+        - &highway_casing1            [0.40, 0.40, 0.40]
+        - &highway_tunnel1            [0.7, 0.7, 0.7]
+        - &highway_tunnel_casing1     [1.00, 1.00, 1.00]
+        - &highway_link_tunnel_casing1 [1.00, 1.00, 1.00]
+        - &ferry1                     [0.75,0.75,0.75]
+        - &rail1                      '#999'
+        - &rail1_e                    '#bbb'
+        - &rail2                      '#777'             # less important rail (service, sidings)
+        - &major_road1                [0.0, 0.0, 0.0]
+        - &major_road1b               [0.935, 0.935, 0.935]
+        - &major_road1c               white    #15%
+        - &major_road2                [0.935, 0.935, 0.935]
+        - &major_road2a               [0.935, 0.935, 0.935]
+        - &major_road2b               [0.935, 0.935, 0.935]
+        - &major_road3                [0.935, 0.935, 0.935]
+        - &major_road4                [0.00, 0.00, 0.00]
+        - &major_road5                white
+        - &major_casing1              [0.40, 0.40, 0.40]        # same as highway_casing1
+        - &major_casing2              [0.40, 0.40, 0.40]        # zoomed out
+        - &major_tunnel1              [0.7, 0.7, 0.7]
+        - &major_tunnel_casing1       [1.00, 1.00, 1.00]
+        - &major_route1               [0.0, 0.0, 0.0]
+        - &major_route2               [0.2, 0.2, 0.2]           # zoomed out
+        - &minor_route                [0.97, 0.97, 0.97]        # same as major_route
+        - &minor_road1                [0.935, 0.935, 0.935]     # natural earth
+        - &minor_road2                [0.935, 0.935, 0.935]     # natural earth, same as major_road2
+        - &minor_road3                [0.935, 0.935, 0.935]
+        - &minor_road4                [0.935, 0.935, 0.935]     # zoomed out
+        - &minor_road5                [0.935, 0.935, 0.935]     # zoomed out, again
+        - &minor_casing1              white                     # same as highway_casing1
+        - &minor_casing2              white                     # zoomed out
+        - &minor_tunnel1              [0.7, 0.7, 0.7]
+        - &minor_tunnel_casing1       [1.00, 1.00, 1.00]
+        - &service_road1              [0.935, 0.935, 0.935]
+        - &service_road2              white
+        - &service_road_casing1       [0.40, 0.40, 0.40]
+        - &service_road_casing2       white
+        - &path1                      [0.97, 0.97, 0.97]
+        - &path2                      [0.97, 0.97, 0.97]        # zoomed out
+        - &path_casing1               [0.40, 0.40, 0.40]
+        - &path_bridge_casing1        [0.40, 0.40, 0.40]
+        - &path_bridge_casing2        [0.40, 0.40, 0.40]        # zoomed out
+        - &path_steps1                red
+        - &path_steps1_b              '#ccc'
+        - &piste_easy                 [0.367,0.750,0.622]
+        - &piste_intermediate         [0.420,0.678,0.863]
+        - &piste_advanced             [0.450,0.450,0.450]
+        - &piste_expert               [0.450,0.450,0.450]
+
+layers:
+    roads:
+        data: { source: osm, layer: roads }
+        filter: {not: { kind: rail } }
+        draw:
+            lines:
+                style: lin
+                interactive: true
+                color: black
+                width: 1px
+                order: function() { return feature.sort_key; }
+                # but give them all the same outline
+                outline:
+                    order: 352
+        bridges-tunnels:
+            filter: { any: [is_bridge: yes, is_tunnel: yes] }
+            draw:
+                lines:
+                    outline:
+                        # except bridges and tunnels, their outlines should also self-sort
+                        order: function() { return feature.sort_key; }
+        default-outline-width:
+            filter: { $zoom: { min: 16 } }
+            draw:
+                lines:
+                    outline:
+                        width: function () { return 3/16 * Math.log($zoom); }
+        highway:
+            filter: { kind: highway }
+            draw:
+                lines:
+                    color: [[8, [0.0,0.0,0.0]], [15, [0.0,0.0,0.0]], [16, [1.0,1.0,1.0]]]
+                    width: [[8, 1px], [12, 1px], [14, 1.75px], [15, 3px], [16, 3px], [17, 5px], [18, 4m], [19, 5m]]
+                    outline:
+                        color: [[8, [1.0,1.0,1.0]], [15, [1.0,1.0,1.0]], [16, [0.00,0.00,0.00]]]
+                        width: [[8,0px], [15,0px], [16, 3px], [17, 4px], [18, 5px], [19, 6px]]
+            link:
+                filter: { is_link: yes } # on- and off-ramps, etc
+                draw:
+                    lines:
+                        #color: *highway_link1
+                        color: [[9, [0.0,0.0,0.0]], [15, [0.0,0.0,0.0]], [16, [1.0,1.0,1.0]]]
+                        width: [[9, 0px], [11, 0.15px], [12, 0.5px], [13, 0.75px], [14, 0.75px], [15, 1.5px], [16, 2px], [17, 2px], [18, 4px], [19, 8px]]
+                        outline:
+                            color: [[9,[1.0,1.0,1.0]], [15,[1.0,1.0,1.0]], [16,[0.00,0.00,0.00]]]
+                            width: [[9, 0px], [15, 0px], [16, 1px], [17, 1px], [18, 2px]]
+                early_link:
+                    filter: { $zoom: {min: 13, max: 15} }
+                    draw:
+                        lines:
+                            order: 352
+                tunnel-link:
+                    filter: {is_tunnel: yes, $zoom: {min: 13} }
+                    draw:
+                        lines:
+                            color: [[13,*highway_tunnel1], [14,*highway_tunnel1], [15,[0.8,0.8,0.8]], [16,[0.970,0.970,0.970]]]
+                            outline:
+                                color: [[13, *highway_tunnel_casing1], [15, *highway_tunnel_casing1], [16, [0.80,0.80,0.80]]]
+                                width: [[9, 0px], [15, 0px], [16, 1px], [17, 1px], [18, 2px]]
+            tunnel:
+                filter: {is_tunnel: yes, $zoom: {min: 13} }
+                draw:
+                    lines:
+                        color: [[13,*highway_tunnel1], [14,*highway_tunnel1], [15,[0.8,0.8,0.8]], [16,[0.950,0.950,0.950]]]
+                        outline:
+                            color: [[13, *highway_tunnel_casing1], [15, *highway_tunnel_casing1], [16, [0.85,0.85,0.85]]]
+                            width: [[8,0px], [15,0px], [16, 3px], [17, 4px], [18, 5px], [19, 6px]]
+            highway_bridge:
+                filter: {is_bridge: yes}
+                draw:
+                    lines:
+                        cap: round
+                        outline:
+                            cap: butt
+        major_road:
+            filter: { kind: major_road }
+            # default style
+            draw:
+                lines:
+                    color: [[8, *major_road4], [13, major_road2], [17, [1.0,1.0,1.0]]]
+                    width: [[13, 1px], [14, 1px], [16, 2.5px], [17,3px]]
+                    outline:
+                        width: [[12, 0px], [13, .5px], [15, 1px], [17, 2px]]
+            trunk_primary:
+                filter: { highway: [trunk, primary] }
+                draw:
+                    lines:
+                        color: [[8, [0.8,0.8,0.8]], [10, [0.8,0.8,0.8]], [12, [0.5,0.5,0.5]], [13, [0.4,0.4,0.4]], [14, [0.3,0.3,0.3]], [15, [0.1,0.1,0.1]], [16, [1.0,1.0,1.0]]]
+                        width: [[8, 0.5px], [11, 0.5px], [12, 0.75px], [13, 0.75px], [14, 1px], [15, 1.25px], [16, 2px], [17, 4px], [18, 4px], [19, 8px]]
+                        outline:
+                            color: [[8,[1.0,1.0,1.0]], [15,[1.0,1.0,1.0]], [16,[0.00,0.00,0.00]]]
+                            width: [[8,1.5px], [16,1.5px], [17, 3px], [18, 4px]]
+                early:
+                    filter: { $zoom: { max: 16 } }
+                    draw:
+                        lines:
+                            order: 352
+                            outline:
+                                order: function() { return feature.sort_key + 2; }
+                    primary:
+                        filter: { kind: [primary] }
+                        draw:
+                            lines:
+                                outline:
+                                    order: function() { return feature.sort_key + 1; }
+                routes:
+                    filter: { ref: true }
+                    draw:
+                        lines:
+                            color: [[8, [0.5,0.5,0.5]], [11, [0.65,0.65,0.65]], [12, [0.2,0.2,0.2]], [13, [0.4,0.4,0.4]], [14, [0.0,0.0,0.0]], [15, [0.0,0.0,0.0]], [16, [1.0,1.0,1.0]]]
+                            width: [[9, 0.5px], [10, 0.65px], [11, 0.65px], [12, 0.65px], [13, 0.65px], [14, 1.25px], [15, 1.25px], [16, 2px], [17, 4px], [18, 4px], [19, 8px]]
+                            outline:
+                                color: [[8,[1.0,1.0,1.0]], [15,[1.0,1.0,1.0]], [16,[0.00,0.00,0.00]]]
+                                width: [[8,1.5px], [16,1.5px], [17, 3px], [18, 4px]]
+                    early:
+                        filter: { $zoom: { max: 16 } }
+                        draw:
+                            lines:
+                                order: function() { return feature.sort_key + 2; }
+                                outline:
+                                    order: 353
+                    tunnel:
+                        filter: {is_tunnel: yes, $zoom: {min: 13} }
+                        draw:
+                            lines:
+                                color: [[13,[0.70,0.70,0.70]], [14,[0.70,0.70,0.70]], [15,[0.8,0.8,0.8]], [16,[0.950,0.950,0.950]]]
+                                outline:
+                                    color: [[13, [1.00,1.00,1.00]], [15, [1.00,1.00,1.00]], [16, [0.85,0.85,0.85]]]
+                                    width: [[8,2px], [16,1.5px], [17, 3px], [18, 3px]]
+        minor_road:
+            filter: { kind: minor_road, not: { highway: service, aeroway: [runway, taxiway] } }
+            draw:
+                lines:
+                    color: [[11, [0.885,0.885,0.885]], [13, [0.80,0.80,0.80]], [14, [0.75,0.75,0.75]], [15, [0.5,0.5,0.5]], [16, [0.3,0.3,0.3]], [17, [1.0,1.0,1.0]]]
+                    width: [[11, 0.35px], [13, 0.5px], [14, 1px], [15, 1px], [16, 2px], [17, 3px], [18, 3px], [19, 8px]]
+                    outline:
+                        color: [[11, [1.0,1.0,1.0]], [16, [1.0,1.0,1.0]], [17, [0.30,0.30,0.30]], [18, [0.00,0.00,0.00]]]
+                        width: [[11, 1px], [16, 0px], [17, 1.5px], [18, 1.5px]]
+            early:
+                filter: { $zoom: { max: 16 } }
+                draw:
+                    lines:
+                        order: 350
+                        outline:
+                            order: 351
+            tunnel:
+                filter: {is_tunnel: yes, $zoom: {min: 13} }
+                draw:
+                    lines:
+                        color: *minor_tunnel1
+                        outline:
+                            color: *minor_tunnel_casing1
+            minor_road_bridge:
+                filter: { is_bridge: yes }
+                draw:
+                    lines:
+                        cap: round
+                        outline:
+                            cap: butt
+
+        service_road:
+            filter: { kind: minor_road, highway: service }
+            draw:
+                lines:
+                    color: [[14, [0.75,0.75,0.75]], [15, [0.60,0.60,0.60]], [16, [0.30,0.30,0.30]], [17, [1.0,1.0,1.0]]]
+                    width: [[14, 0.15px], [15, 0.75px], [16, 1.25px], [17, 3px], [18, 3px], [19, 6px]]
+                    outline:
+                        color: [[14,[1.0,1.0,1.0]], [16,[1.0,1.0,1.0]], [17,[0.30,0.30,0.30]], [18,[0.00,0.00,0.00]]]
+                        width: [[13, 0px], [14, 0.5px], [16, 0px], [17, 1.0px], [19, 1.5px]]
+        path:
+            filter:
+                all:
+                    - kind: path
+                not:
+                    - highway: [steps, track]
+                    - man_made: [pier]
+            draw:
+                lines:
+                    color: [[14, [0.790,0.790,0.790]], [15, [1.00,1.00,1.00]]]
+                    width: [[14, 0.35px], [15, 0px], [16, 0.25px], [17, 3px], [18, 3px], [19, 4px]]
+                    outline:
+                        color: [0.790,0.790,0.790]
+                        width: [[14, 0.0px], [15, 0.35px], [16, 0.45px], [17, 0.85px], [18, 1px]]
+            early:
+                filter:
+                    $zoom: { max: 17 }
+                draw:
+                    lines:
+                        order:
+                            order: 351
+                        outline:
+                            order: 350
+            pedestrian:
+                filter: { highway: pedestrian }
+                draw:
+                    lines:
+                        color: [[14, [0.790,0.790,0.790]], [15, [1.00,1.00,1.00]]]
+                        width: [[14, 0.35px], [15, 0px], [16, 0.25px], [17, 3px], [18, 3px], [19, 4px]]
+                        outline:
+                            color: [0.790,0.790,0.790]
+                            width: [[14, 0.0px], [15, 0.35px], [16, 0.45px], [17, 0.85px], [18, 1px]]
+            bridge:
+                filter: { is_bridge: yes }
+                draw:
+                    lines:
+                        width: [[14, 0.35px], [15, 0px], [16, 0.25px], [17, 3px], [18, 3px], [19, 4px]]
+                        cap: round
+                        outline:
+                            color: [[15,*path_bridge_casing2],[16,*path_bridge_casing1]]
+                            width: [[14, 0.0px], [15, 0.35px], [16, 0.45px], [17, 0.85px], [18, 1px]]
+                            cap: butt
+        track:
+            filter: { kind: path, highway: track }
+            draw:
+                lines:
+                    color: [[14, [0.790,0.790,0.790]], [15, [1.00,1.00,1.00]]]
+                    width: [[13, 0px], [14, 0.35px], [15, 0px], [16, 0.25px], [17, 3px], [18, 3px], [19, 4px]]
+                    cap: butt
+                    join: round
+                    outline:
+                        color: [0.790,0.790,0.790]
+                        width: [[14, 0.0px], [15, 0.35px], [16, 0.45px], [17, 0.85px], [18, 1px]]
+            bridge:
+                filter: { is_bridge: yes }
+                draw:
+                    lines:
+                        cap: butt
+                        width: [[13, 0px], [14, 0.35px], [15, 0px], [16, 0.25px], [17, 3px], [18, 3px], [19, 4px]]
+                        cap: round
+                        outline:
+                            color: [1.0,1.0,1.0]
+                            width: [[14, 0.0px], [15, 0.35px], [16, 0.45px], [17, 0.85px], [18, 1px]]
+                            cap: butt
+            in_park:
+                filter: { landuse_kind: [park,national_park,nature_reserve,conservation,golf_course,garden] }
+                draw:
+                    lines:
+                        color: [[14, [0.790,0.790,0.790]], [15, [1.00,1.00,1.00]]]
+                        width: [[13, 0px], [14, 0.35px], [15, 0px], [16, 0.25px], [17, 3px], [18, 3px], [19, 4px]]
+                        outline:
+                            color: [0.790,0.790,0.790]
+                            width: [[14, 0.0px], [15, 0.35px], [16, 0.45px], [17, 0.85px], [18, 1px]]
