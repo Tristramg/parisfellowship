@@ -77,10 +77,16 @@ tables:
       type: string
     - name: type
       type: mapping_value
+    - key: buildingpart
+      name: buildingpart
+      type: string
+
     mapping:
       railway:
       - station
       - platform
+      buildingpart: [__any__]
+      buildingpart:verticalassage: [__any__]
     type: polygon
   transport_points:
     fields:
