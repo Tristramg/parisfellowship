@@ -227,6 +227,7 @@ layers:
                 not:
                     - highway: [steps, track]
                     - man_made: [pier]
+                    - tunnel: [yes]
             draw:
                 lines:
                     color: [[14, [0.790,0.790,0.790]], [15, [1.00,1.00,1.00]]]
