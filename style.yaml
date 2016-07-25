@@ -37,7 +37,9 @@ sources:
     subway:
         type: GeoJSON
         url: subway.geojson
-
+    station:
+        type: GeoJSON
+        url: areas.geojson
 layers:
     subway:
       data: { source: subway }
@@ -48,6 +50,33 @@ layers:
           color: function() { return feature.colour; }
           width: 8
           z: function() { return  feature.layer * 10; }
+    station:
+        data: { source: station }
+        draw:
+            polygons:
+                style: poly
+                color: black
+                z: function() { return  feature.layer * 10; }
+        corridor:
+            filter: { buildingpart: corridor }
+            draw:
+                polygons:
+                    color: blue
+        vertical:
+            filter: { buildingpart: verticalpassage }
+            draw:
+                polygons:
+                    extruded: true
+                    color: yellow
+                    height: 10
+                    z: function() { return (feature.layer - 1) * 10}
+        room:
+            filter: { buildingpart: room }
+            draw:
+                polygons:
+                    style: lin
+                    width: 3px
+                    z: function() { return feature.layer * 10 - 1; }
     buildings:
         data: { source: osm }
         filter: { $zoom: { min: 13 } }
