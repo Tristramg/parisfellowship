@@ -659,13 +659,6 @@ layers:
                     polygons:
                         color: [1.0,1.0,1.0]
                         visible: *purple_v
-            military:
-                filter:
-                    kind: military
-                draw:
-                    polygons:
-                        color: [1.0,1.0,1.0]
-                        visible: true
             university:
                 filter:
                     kind: [university, college]
