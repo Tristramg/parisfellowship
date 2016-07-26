@@ -27,29 +27,48 @@ styles:
                     if (isWall()) {
                         color = vec4(0.6, 0.6, 0.6, 0.5);
                     } else {
-                        color = vec4(0.7, 0.7, 0.7, 0.3);
+                        color = vec4(0.7, 0.7, 0.7, 0.2);
                     }
 
 sources:
     osm:
         type: TopoJSON
         url:  //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
-    subway:
+    rail:
         type: GeoJSON
         url: subway.geojson
     station:
         type: GeoJSON
         url: areas.geojson
 layers:
-    subway:
-      data: { source: subway }
+    rail:
+      data: { source: rail }
       draw:
-        railway:
-          style: lin
-          order: gloal.order
-          color: function() { return feature.colour; }
-          width: 8
-          z: function() { return  feature.layer * 10; }
+          rail:
+              style: lin
+              order: gloal.order
+              width: 1px
+              z: function() { return  feature.layer * 10; }
+              color: black
+      rer:
+          filter:  [network: RER]
+          draw:
+              rail:
+                  color: function() { return feature.colour; }
+                  width: 12
+      transilien:
+          filter:  [network: transilien]
+          draw:
+              rail:
+                  color: function() { return feature.colour; }
+                  width: 12
+      subway:
+          filter: [ network: RATP ]
+          draw:
+              rail:
+                  color: function() { return feature.colour; }
+                  width: 8
+
     station:
         data: { source: station }
         draw:
@@ -88,4 +107,4 @@ layers:
                 extrude: true
                 style: lin
                 color: black
-                width: 1px
+                width: 0.5px

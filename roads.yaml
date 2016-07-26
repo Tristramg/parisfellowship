@@ -54,7 +54,10 @@ settings:
 layers:
     roads:
         data: { source: osm, layer: roads }
-        filter: {not: { kind: rail } }
+        filter:
+            not:
+                - kind: rail
+                - {kind: path, , is_tunnel: yes}
         draw:
             lines:
                 style: lin
@@ -227,7 +230,6 @@ layers:
                 not:
                     - highway: [steps, track]
                     - man_made: [pier]
-                    - tunnel: [yes]
             draw:
                 lines:
                     color: [[14, [0.790,0.790,0.790]], [15, [1.00,1.00,1.00]]]
