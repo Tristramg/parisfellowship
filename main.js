@@ -3,7 +3,8 @@
         scrollWheelZoom: 'center',
         center: [48.829606,  2.376093],
         zoom: 17,
-        boxZoom: false
+        boxZoom: false,
+        keyboard: false
     });
 
     var layer = Tangram.leafletLayer({
@@ -14,7 +15,10 @@
     window.scene = layer.scene;
     var hash = new L.Hash(map);
 
-    map.on('drag', onMouseDrag)
+    map.on('drag', onMouseDrag);
+    document.addEventListener('keydown', onKeyDown, false);
+
+    window.map = map;
 }());
 
 function onMouseDrag (ev) {
@@ -25,3 +29,43 @@ function onMouseDrag (ev) {
         scene.styles.tilt.shaders.uniforms.u_tilt_z -= e.movementX / 200.0;
     }
 }
+
+function onKeyDown (event) {
+    const keyName = event.key;
+
+    if(!event.shiftKey && !event.altKey && !event.ctrlKey) {
+        var angle = scene.styles.tilt.shaders.uniforms.u_tilt_z;
+        var dx = Math.sin(angle) * 80;
+        var dy = Math.cos(angle) * 80;
+        switch(keyName) {
+            case 'ArrowUp':
+                map.panBy([-dx, -dy]);
+                break;
+            case 'ArrowDown':
+                map.panBy([dx, dy]);
+                break;
+            case 'ArrowLeft':
+                map.panBy([-dy, dx]);
+                break;
+            case 'ArrowRight':
+                map.panBy([dy, -dx]);
+                break;
+        }
+    } else if (event.shiftKey && !event.altKey && !event.ctrlKey) {
+        switch(keyName) {
+            case 'ArrowUp':
+                scene.styles.tilt.shaders.uniforms.u_tilt_x -= 0.1;
+                break;
+            case 'ArrowDown':
+                scene.styles.tilt.shaders.uniforms.u_tilt_x += 0.1;
+                break;
+            case 'ArrowLeft':
+                scene.styles.tilt.shaders.uniforms.u_tilt_z += 0.1;
+                break;
+            case 'ArrowRight':
+                scene.styles.tilt.shaders.uniforms.u_tilt_z -= 0.1;
+                break;
+        }
+        scene.requestRedraw();
+    }
+};
