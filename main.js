@@ -60,10 +60,10 @@ function onKeyDown (event) {
                 scene.styles.tilt.shaders.uniforms.u_tilt_x += 0.1;
                 break;
             case 'ArrowLeft':
-                scene.styles.tilt.shaders.uniforms.u_tilt_z += 0.1;
+                scene.styles.tilt.shaders.uniforms.u_tilt_z -= 0.1;
                 break;
             case 'ArrowRight':
-                scene.styles.tilt.shaders.uniforms.u_tilt_z -= 0.1;
+                scene.styles.tilt.shaders.uniforms.u_tilt_z += 0.1;
                 break;
         }
         scene.requestRedraw();
