@@ -78,19 +78,19 @@ layers:
             polygons:
                 style: poly
                 color: black
+                order: function() { return 10 + feature.layer;}
                 z: function() { return  feature.layer * 10; }
+                color: function() { return [0, 0, 0, 1 - Math.max(0, $zoom - 17 + feature.layer) / 3.0];}
         corridor:
             filter: { buildingpart: corridor }
             draw:
                 polygons:
-                    color: blue
+                    color: function() { return [0, 0, 1, 1 - Math.max(0, $zoom - 17 + feature.layer) / 3.0];}
         vertical:
             filter: { buildingpart: verticalpassage }
             draw:
                 polygons:
-                    extruded: true
-                    color: yellow
-                    height: 10
+                    color: function() {console.log($zoom) ;return [0, 1, 1, 1 - Math.max(0, $zoom - 17 + feature.layer) / 3.0];}
                     z: function() { return (feature.layer - 1) * 10}
         room:
             filter: { buildingpart: room }
@@ -99,6 +99,7 @@ layers:
                     style: lin
                     width: 3px
                     z: function() { return feature.layer * 10 - 1; }
+                    color: function() { return [0, 0, 0, 1 - Math.max(0, $zoom - 17 + feature.layer) / 3.0];}
     buildings:
         data: { source: osm }
         filter: { $zoom: { min: 13 } }
