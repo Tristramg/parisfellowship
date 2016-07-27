@@ -5,6 +5,7 @@ import:
     - https://tangrams.github.io/blocks/geometry/normal.yaml
 global:
     order: function() { return feature.sort_key || 0; }
+    rail_order: function() { if($zoom < 15) {return 1000;} else {return feature.sort_key;}}
 scene:
     background:
         color: white
@@ -45,29 +46,31 @@ layers:
       data: { source: rail }
       draw:
           rail:
+              order: global.rail_order
               style: lin
-              order: gloal.order
               width: 1px
-              z: function() { return  feature.layer * 10; }
+              z: function() { return feature.layer * 10; }
               color: black
       rer:
           filter:  [network: RER]
           draw:
               rail:
                   color: function() { return feature.colour; }
-                  width: 12
+                  width: [[10, 3px], [18, 2.8m]]
       transilien:
           filter:  [network: transilien]
           draw:
               rail:
                   color: function() { return feature.colour; }
-                  width: 12
+                  width: [[10, 3px], [18, 2.8m]]
       subway:
-          filter: [ network: RATP ]
+          filter:
+              route: subway
+              $zoom: { min: 12 }
           draw:
               rail:
                   color: function() { return feature.colour; }
-                  width: 8
+                  width: [[10, 2px], [18, 2.4m]]
 
     station:
         data: { source: station }
