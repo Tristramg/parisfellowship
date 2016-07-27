@@ -464,6 +464,7 @@ styles:
             blocks:
                 color: |
                     color.rgb = mix(vec3(1.000), color.rgb, TileDots(35.0, 0.31));
+                    color = vec4(color.rgb, 0.5);
 
     sand:
         base: polygons
@@ -659,13 +660,6 @@ layers:
                     polygons:
                         color: [1.0,1.0,1.0]
                         visible: *purple_v
-            university:
-                filter:
-                    kind: [university, college]
-                draw:
-                    dots-rev:
-                        color: [0.945,0.945,0.945]
-                        visible: true
     water:
         data: { source: osm, layer: water }
         draw:
