@@ -19,6 +19,11 @@
     document.addEventListener('keydown', onKeyDown, false);
 
     window.map = map;
+
+    var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+    var osmAttrib='Map data &copy; OpenStreetMap contributors';
+    var osm = new L.TileLayer(osmUrl, {minZoom: 0, maxZoom: 13, attribution: osmAttrib });
+    var miniMap = new L.Control.MiniMap(osm, { toggleDisplay: true }).addTo(map);
 }());
 
 function onMouseDrag (ev) {
