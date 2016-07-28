@@ -3,6 +3,7 @@ import:
     - roads.yaml
     - landuse.yaml
     - https://tangrams.github.io/blocks/geometry/normal.yaml
+    - https://tangrams.github.io/blocks/lines/dash.yaml
 global:
     order: function() { return feature.sort_key || 0; }
     rail_order: function() { if($zoom < 15) {return 1000;} else {return feature.sort_key;}}
@@ -77,7 +78,7 @@ layers:
                   color: function() { return feature.colour; }
                   width: [[10, 3px], [18, 2.8m]]
       transilien:
-          filter:  [network: transilien]
+          filter:  [network: Transilien]
           draw:
               rail:
                   color: function() { return feature.colour; }
