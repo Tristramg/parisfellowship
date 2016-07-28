@@ -35,9 +35,12 @@ styles:
             diffuse:
                 texture: dash.png
                 mapping: planar
+    entrance:
+        mix: tilt
+        base: points
     walls:
         mix: [poly, geometry-normal]
-        blend: inlay
+        blend: overlay
         shaders:
             blocks:
                 color: |
@@ -122,3 +125,18 @@ layers:
                 style: lin
                 color: black
                 width: 0.5px
+    pois:
+        data: { source: osm }
+        filter: { kind: subway_entrance }
+        draw:
+            entrance:
+                color: black
+                size: 12px
+                text:
+                    color: black
+                    font:
+                        fill: [0.25,0.25,0.25]
+                        weight: 600
+                        size: 12px
+                        stroke: { color: [1.0,1.0,1.0,0.75], width: 4 }
+                    text-source: function() {return 'moo';}
