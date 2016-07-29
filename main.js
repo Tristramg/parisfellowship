@@ -1,8 +1,8 @@
 (function () {
     var map = L.map('map',{
         scrollWheelZoom: 'center',
-        center: [48.829606,  2.376093],
-        zoom: 17,
+        center: [48.8681, 2.3650],
+        zoom: 16,
         boxZoom: false,
         keyboard: false
     });
